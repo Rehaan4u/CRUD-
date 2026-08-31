@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.qnopy-logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
