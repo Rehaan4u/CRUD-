@@ -1,9 +1,13 @@
-:host {
+.user-list {
+  list-style: none;
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 24px;
+  padding: 40px 20px;
+  margin: 0;
 }
 
-.main-content {
-  flex: 1;
+.user-list__item {
+  flex: 0 1 200px;
 }

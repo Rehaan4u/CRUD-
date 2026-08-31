@@ -1,7 +1,17 @@
 <app-header></app-header>
 
 <div class="main-content">
-  <!-- your page content will go here -->
+  <ul class="user-list">
+    <li class="user-list__item">
+      <app-user [reqUser]="user1"></app-user>
+    </li>
+    <li class="user-list__item">
+      <app-user [reqUser]="user2"></app-user>
+    </li>
+        <li class="user-list__item">
+      <app-user [reqUser]="user3"></app-user>
+    </li>
+  </ul>
 </div>
 
 <app-footer></app-footer>
