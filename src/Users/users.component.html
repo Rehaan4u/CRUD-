@@ -1,6 +1,6 @@
 <div class="user-card" *ngIf="reqUser">
-  <img [src]="reqUser.avatar" alt="{{ reqUser.name }} avatar" class="user-card__avatar" />
+  <img [src]="'../assets/'+reqUser.avatar" alt="{{ reqUser.name }} avatar" class="user-card__avatar" />
   <h3 class="user-card__name">{{ reqUser.name }}</h3>
-  <p class="user-card__id">ID: {{ reqUser.id }}</p>
+  <!-- <p class="user-card__id">ID: {{ reqUser.id }}</p> -->
   <button class="user-card__button">View Details</button>
 </div>
