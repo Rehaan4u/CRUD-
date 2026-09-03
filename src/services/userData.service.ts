@@ -14,4 +14,8 @@ export class userDetails {
         return this.userData.find(curr=>curr.id===id);
     }
 
+    getUserDatabyName(name:string): userData | undefined {
+        return this.userData.find(curr=>curr.name===name);
+    }
+
 }
