@@ -17,13 +17,25 @@ export class updateDetailsForm {
     constructor(public currUserDetails:userData | undefined, public userService:userDetails){}
 
     updateDetailsForm=new FormGroup({
-        name: new FormControl(),
-        avatar: new FormControl(),
-        brief: new FormControl(),
+        name: new FormControl(this.currUserDetails?.name),
+        avatar: new FormControl(this.currUserDetails?.avatar),
+        brief: new FormControl(this.currUserDetails?.brief),
         passwd: new FormControl()
     })
 
     fetchUserDetails(name:string){
         this.currUserDetails = this.userService.getUserDatabyName(name);
+    }
+
+    updateDetails(){
+        //I have set the condition where the user can only update his details if he enters the 
+        // correct password,
+        // otherwise the details will not be updated.
+        if(this.updateDetailsForm.get('passwd')?.value===this.currUserDetails?.passwd){
+            //.get() method is used to access the data user enter in form controls in the form group.
+            this.currUserDetails!.name=this.updateDetailsForm.get('name')?.value;
+            this.currUserDetails!.avatar=this.updateDetailsForm.get('avatar')?.value;
+            this.currUserDetails!.brief=this.updateDetailsForm.get('brief')?.value;
+        }
     }
 }
