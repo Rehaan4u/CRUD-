@@ -11,8 +11,8 @@ import { updateDetailsForm } from '../forms/updateDetails/updateDetails.form.com
 
 
 const appRoutes: Routes = [
-  {path: '', component: AppComponent},
-  {path:'updateDetails', component:updateDetailsForm}
+  // {path: '', component: AppComponent},
+  {path:'updateDetails/:name', component:updateDetailsForm}
 ]
 
 @NgModule({
@@ -20,13 +20,13 @@ const appRoutes: Routes = [
     AppComponent,
     Header,
     Footer,
-    Users
+    Users,
+    updateDetailsForm
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes)
-
   ],
   bootstrap: [AppComponent]
 })

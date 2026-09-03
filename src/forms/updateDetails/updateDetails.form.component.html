@@ -2,12 +2,12 @@
   <div class="form-card">
 
     <div class="avatar-wrapper">
-      <img [src]="updateDetailsForm.get('avatar')?.value" alt="User avatar" class="avatar-img" />
+      <img [src]="'../assets/' + currUserDetails?.avatar"  class="avatar-img" />
     </div>
 
     <h2 class="form-title">Update Details</h2>
 
-    <form [FormGroup]= "updateDetailsForm" (ngsubmit)="newDetails()" (onClickUserData)="fetchUserDetails($event)">
+    <form [formGroup]= "updateDetailsForm" (ngSubmit)="updateDetails()">
 
       <div class="form-group">
         <label for="name">Name</label>
@@ -30,7 +30,7 @@
       </div>
 
       <div class="form-actions">
-        <button type="button" class="btn-secondary">Cancel</button>
+        <button type="button" class="btn-secondary" (click)="router.navigate(['/'])">Cancel</button>
         <button type="submit" class="btn-primary" [disabled]="updateDetailsForm.invalid" >Save</button>
       </div>
     </form>

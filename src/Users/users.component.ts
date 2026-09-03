@@ -1,6 +1,7 @@
+
+import { Router } from '@angular/router'; 
 import {Input,Component,Output, EventEmitter} from '@angular/core';
 import {userData} from '../interfaces/userData.interface';
-
 
 
 @Component({
@@ -11,13 +12,17 @@ import {userData} from '../interfaces/userData.interface';
 
 export class Users {
     @Input() reqUser!: userData | undefined;
-    @Output() onClickUserData= new EventEmitter()
+    // @Output() onClickUserData= new EventEmitter()
+    constructor(private router:Router) {}
+
 
     updateClicked() {
         //here with reqUSer I have used ?(optional chaining operatoar) to check if reqUser is 
         // not undefined before accessing its name property. 
         //This prevents runtime errors in case reqUser is undefined.
-        this.onClickUserData.emit(this.reqUser?.name);
+        if(this.reqUser?.name)
+        this.router.navigate(['/updateDetails', this.reqUser.name])
+
     }
 }
 
