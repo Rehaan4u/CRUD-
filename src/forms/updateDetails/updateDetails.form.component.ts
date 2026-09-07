@@ -59,6 +59,8 @@ export class updateDetailsForm {
             this.currUserDetails!.brief=this.updateDetailsForm.get('brief')?.value;
             this.router.navigate(['/']);
         }else {
+            //alert is a browser built-in api that displays a message in a dialog box, 
+            // and waits for the user to click "OK" or "Cancel".
             alert('Incorrect password');
         }
     }

@@ -1,0 +1,157 @@
+Why everything is doubled
+AppComponent is your root component — it's the one bootstrapped directly into index.html via <app-root>. It is not something that's meant to be loaded through <router-outlet> — it's the component that contains <router-outlet>.
+
+But you've told the router: "when the URL is '', render AppComponent inside the outlet." Here's what happens mechanically:
+
+Browser loads index.html → Angular bootstraps AppComponent → renders app.component.html, which contains header, <router-outlet>, user list, footer.
+The router sees the current URL is '' (empty/root), matches your route {path: '', component: AppComponent}, and instantiates a second copy of AppComponent, injecting it into the <router-outlet> that's sitting inside the first AppComponent.
+That second AppComponent renders its own header, its own outlet, its own user list, its own footer — all nested inside the first one's markup.
+If routing ever matched '' again inside that nested outlet, you'd get a third copy, and so on — it just happens to stop at two here because nothing re-triggers a further '' match recursively in a runaway way, but you're already seeing the double header/list from one level of this nesting.
+This is why you see two "Qnopy Employee Details" headers stacked, and (if you scrolled) you'd likely find two user-list sections too — the screenshot's cut off after the first list.
+
+Fix: just delete that route entirely.
+
+typescript
+const appRoutes: Routes = [
+  { path: 'updateDetails/:name', component: updateDetailsForm }
+];
+AppComponent doesn't need a route — it's always there by default since it's the bootstrap component. When the URL is '' (i.e. nothing matches any defined route), <router-outlet> will simply render nothing, which is exactly what you want: header, user list, footer show normally, and the outlet is just empty until you navigate to /updateDetails/:name.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Why navigate(['/']) matches path: ''
+In Angular's router, path: '' specifically means "the empty path segment" — i.e., the root URL with nothing after the domain/port, like localhost:4200 or localhost:4200/. When you call:
+
+typescript
+this.router.navigate(['/']);
+Angular resolves '/' as navigating to the root URL — which, after stripping the leading slash, corresponds to the empty path segment internally. So '/' (as a navigation target) and '' (as a route's path definition) refer to the same thing: the app's root. That's why navigate(['/']) was successfully matching your {path: '', component: AppComponent} route and re-triggering that nested-AppComponent bug on every successful save.
+
+Once you delete that route, navigate(['/']) will still correctly take the user back to the root URL — it'll just no longer match any route (since there's nothing to match), the outlet will be empty, and your normal app.component.html content (rendered once, from the bootstrap) will show as the "home page." Functionally exactly what you want.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+How the Router object works
+
+Router is a class Angular provides. When your app starts, Angular creates one instance of this class and keeps it in memory for the entire life of your app (this is what "singleton service" means — one shared object, not a new one per component). Internally, this object keeps track of: the current URL, the currently matched route, and the list of all Route definitions you gave it via RouterModule.forRoot(appRoutes). 
+It also exposes methods (navigate, navigateByUrl) and properties (url, events) you can use.
+
+Is .navigate() a method of a class — yes
+
+Router is a class. navigate() is one of its methods (a function defined inside that class). When you write this.router.navigate([...]), you're calling that method on the one shared instance Angular gave you through dependency injection. Internally, navigate() takes your array of path segments, builds a URL string from them, checks that URL against your Routes array to find a match, and if found, tells Angular to 
+destroy whatever component is currently in <router-outlet> and create the new matched one instead.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+<div> vs. class — these are two different things, not alternatives
+<div> is an HTML element — a generic, meaningless block container. It doesn't do anything by itself; it exists so you have something to group content inside and style.
+class is an attribute you can put on any HTML element (not just <div>) — <div class="card">, <p class="card">, <button class="card"> are all valid. It's a label you attach so CSS (or JS) can select and style that specific element(s) sharing that label.
+
+So it's not "div vs class" as competing concepts — a <div> is a container, and class is a tag you can put on any container (or any element) to style it. You almost always see them together (<div class="form-card">) but they answer different questions: <div> = "what is this element," class = "how do I identify/style this element."
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Are separate Router objects created wherever it's called?
+
+No — one single instance exists for the whole app. Every component that injects Router via its constructor gets the exact same object back — Angular's dependency injector doesn't create a new one per component; it looks up the existing singleton and hands you a reference to it. This is why calling .navigate() from Users component affects the entire app's current view — because there's only one router, 
+tracking one current state, shared by everyone.
+
+(This is different from ActivatedRoute, by the way — that one does get a fresh-ish instance/context per route activation, since it represents "what am I, specifically, being shown right now," which is naturally different for each routed component.)
+
+Ways to register a service, other than providedIn: 'root'
+
+providedIn: 'root' is the modern, common way (one instance, shared app-wide, and it's "tree-shakeable" — meaning if nothing ever injects it, Angular can even exclude it from your final bundle). Alternatives:
+
+Declare it in a specific @NgModule's providers: [...] array — the service instance is then shared only among components declared in that module, not the whole app.
+Declare it in a specific @Component's providers: [...] array — a new, separate instance gets created for that component and its children specifically. Useful when you deliberately want isolated state per component instance (e.g. a wizard step component that shouldn't share state with another copy of itself elsewhere on the page).
+
+providedIn: 'root' is what you want 99% of the time for something like your userDetails service, since you want one shared source of truth.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Other route params, and is it good practice
+
+Yes — you can have multiple params in one path:
+
+typescript
+{ path: 'update/:id/:section', component: SomeComponent }
+
+and read both via route.snapshot.paramMap.get('id') and .get('section').
+
+Whether using :name is good practice: it's functionally fine for a small learning project, but in real production apps, using a stable unique identifier (like your id: number field) rather than name is the stronger convention — names can collide (two employees named "Onkar"), can contain special characters needing URL-encoding (spaces became %20 in your screenshot's URL, which is a symptom of this), and can change
+(someone updates their own name, breaking any bookmarked/shared link). Switching to path: 'update/:id' and getUserData(id) (which you already have) would be the more standard practice.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+How alert() works
+
+alert() isn't Angular or TypeScript-specific — it's a built-in browser API, available globally in any JavaScript running in a browser tab (window.alert(...), though you can drop window.). Calling it pauses all further JavaScript execution on the page until the user dismisses the popup — it's synchronous and blocking. That's why it's generally discouraged in real apps (it freezes the whole UI thread), but it's a fine quick 
+placeholder for your learning project before you build a nicer inline error message.
+
+How <router-outlet> automatically swaps content
+
+<router-outlet> is a directive (Angular-provided), not a plain HTML tag — Angular recognizes it specially. It works like a marker: "insert whatever the router decides is currently active, right here." When Router.navigate() finishes matching a URL to a route, it tells Angular's internal rendering system to destroy whatever component instance currently occupies that outlet (calling its ngOnDestroy if defined) 
+and create the newly matched component's instance in that same DOM position. This is all handled internally by RouterModule — you don't write any code to make this swapping happen; it's automatic as long as <router-outlet> exists somewhere in the template tree and your routes are configured.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+How ngSubmit works with <button type="submit">
+
+Two separate mechanisms working together:
+
+type="submit" is a native HTML button behavior — inside a <form>, clicking a type="submit" button (or pressing Enter in a text field inside that form) triggers the browser's native "submit" event on the <form> element. By default, this would cause a full page reload/navigation (the browser's old-fashioned way of submitting forms to a server) — which you don't want in a single-page app.
+(ngSubmit)="updateDetails()" is an Angular event binding that listens for that same native submit event, but Angular's FormGroupDirective (attached via [formGroup]) automatically calls event.preventDefault() for you internally, stopping the page-reload behavior, and instead just calls your updateDetails() method in place.
+
+So: type="submit" triggers the browser's native submit event, and ngSubmit intercepts it, cancels the default page-reload, and runs your method instead.
+
+ngOnInit(): void — quick recap
+
+Already covered in depth earlier — it's a method (not a decorator) from the OnInit interface, which Angular calls once, automatically, right after the component's constructor and input-setting are done, before the view is guaranteed to be rendered. void because Angular calls it purely for side effects and never reads a return value.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Why the password field shows dots
+
+Yes, exactly — type="password" is a native HTML <input> attribute. The browser itself (not Angular, not your CSS) automatically masks whatever character is typed with a dot/bullet symbol on screen, while the actual typed string is still what gets stored as the input's value underneath. Angular's formControlName="passwd" just reads whatever that underlying (unmasked) string value is when you access .get('passwd')?.value.
+
+How <input> works with formControlName
+
+formControlName="passwd" is a directive Angular attaches to that <input> element. It does two things continuously, automatically:
+
+Reads the actual DOM input's value on every keystroke and writes it into the corresponding FormControl object's internal .value (the one living inside your FormGroup in the .ts file).
+Writes back — if your code ever sets that FormControl's value programmatically (like your .patchValue({...}) call), the directive detects that and updates what's shown in the actual <input> element on screen.
+
+This two-way sync is why you can both read this.updateDetailsForm.get('passwd')?.value in your TypeScript, and also pre-fill fields via patchValue and see them appear in the actual form fields — the directive is the bridge keeping the DOM element and the FormControl object in agreement.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Why the page doesn't crash on refresh — and the # question
+
+Refreshing at a URL like /updateDetails/Onkar%20Kulkarni could 404 in some deployment setups, because technically no server-side file exists at that path — but Angular's own development server (ng serve) is specifically configured to handle this: for any URL that doesn't match a real static file, it falls back to serving index.html anyway, letting your Angular app boot up fresh and its router figure out 
+(from the URL) what to show. This is why it "just works" for you right now, in development — it's the dev server being helpful, not something your code did.
+
+Using # (hash-based routing, useHash: true) is a different fix for a different problem — it's mainly useful when deploying to a static file host that can't be configured to always serve index.html for unknown paths (some basic static hosts genuinely 404 on /updateDetails/Onkar, unlike Angular's dev server). Hash routing puts everything after # client-side only (/#/update/Onkar), 
+so the server only ever sees a request for /, never /update/Onkar — sidestepping the need for server configuration entirely. It has nothing to do with your data-resetting problem.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+The real bug: why updates don't persist through a refresh
+
+Your own diagnosis was close, but let's nail the actual mechanism precisely, since this is important:
+
+Everything in your app — DUMMY_USERS, the service's userData array, currUserDetails — is just JavaScript objects sitting in your browser tab's memory, for as long as that tab/page stays alive. When you update an object in the array, you are correctly mutating the real, shared object in memory (your earlier reasoning about "everyone points to the same reference" is correct, and that part does work — 
+that's why navigating between pages within the same session shows updated data).
+
+But refreshing the page doesn't just "reset a variable" — it throws away the entire JavaScript runtime for that tab and starts completely from scratch: your whole Angular app bundle is re-downloaded/re-executed from the files on disk, dummyUsers.ts's array literal is re-created fresh from its hardcoded source code, and the service creates a brand new instance holding that fresh array. 
+None of your in-memory mutations were ever written back into the actual .ts file on disk — nothing in your code does that, and nothing in a typical frontend-only app can do that (browsers can't rewrite your project's source files). So a refresh isn't "resetting a variable," it's "re-running your entire program from its original source," which naturally produces the original hardcoded values again.
+
+This means: to make updates survive a refresh, you need actual persistence — storing the data somewhere that survives a full page reload. Common options, roughly in order of complexity:
+
+localStorage — simplest: browser-provided key-value storage that survives refreshes and even closing the tab. You'd save your userData array to it after every update, and have your service read from it on startup (falling back to DUMMY_USERS if nothing's stored yet).
+A real backend + database — the proper long-term answer for a real CRUD app (which is what you said this project is for), where your Angular app makes HTTP requests to a server that actually persists data.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
