@@ -149,9 +149,42 @@ A real backend + database — the proper long-term answer for a real CRUD app (w
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+Hashing — your understanding, confirmed and refined slightly
+
+Your explanation is correct. To sharpen the wording: with hash-based routing, everything after # is never sent to the server at all — browsers treat the # fragment as purely client-side; a request to example.com/#/update/Onkar only ever asks the server for example.com/, full stop. The server literally never sees /update/Onkar as part of any HTTP request. Angular's router then reads that fragment client-side 
+(via JavaScript, after the page has already loaded) and decides what to render. This is why it "just works" on any static host, no server configuration needed — the server's job is trivial (always serve index.html), and all the routing logic happens entirely in the browser after that.
+
+Without hashing, "path-based" routing sends the full path in the actual HTTP request (GET /update/Onkar), which requires the server to be explicitly told "for any path you don't recognize as a real file, serve index.html anyway" — which is what Angular's dev server does automatically for you, but a production static host might need manual configuration for (this is the piece that would 404 without that setup).
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+The initial page load — this part is accurate
+
+When the browser first hits your app's URL, it requests index.html. That file doesn't contain your actual app — it just contains <script> and <link> tags pointing to your compiled bundles: main.js, polyfills.js, runtime.js, styles.css, and so on (this is what Angular CLI produces after building). Each of those tags triggers its own separate HTTP request to fetch that file. This is exactly why you're seeing 
+~13 requests in your network tab — index.html itself, plus each JS/CSS bundle, plus any images/fonts/icons referenced. This part of your understanding is correct.
+
+What happens after that — the actual mechanism (slightly different from "intercepts clicks" broadly)
+
+Once all those bundles finish downloading, the browser executes main.js, which is where Angular actually bootstraps — this is when AppComponent gets created and your whole app starts running as a live JavaScript program inside that tab, no different in principle than any other JS app running in memory.
+From here, the specific mechanism that avoids new HTTP requests during navigation is the browser's History API — specifically pushState()/replaceState(), which are **native browser JavaScript functions** (not Angular-specific) that let a page change the URL shown in the address bar without triggering a real navigation/page-reload. 
+Angular's Router uses this internally: when you call .navigate(), it doesn't ask the browser to "go to a new page" — it calls pushState() to update the visible URL, and separately, purely in JS, swaps out whatever component is sitting in <router-outlet>. 
+The browser has no idea a "navigation" conceptually happened at all — as far as the browser/server relationship goes, nothing was requested.
+
+As for clicks specifically: when you use routerLink="/update/Onkar" on an <a> tag (note: you're using router.navigate() in .ts code instead, but routerLink is the template-based equivalent), Angular's RouterLink directive attaches a click listener that calls event.preventDefault() 
+— this stops the browser's default behavior for anchor tags, which would otherwise be "send a real HTTP GET request for this href and reload the page." 
+Instead, Angular's router takes over from there and does the pushState + component-swap dance described above.
+One refinement to your model — Angular isn't "passed along with" the click handling, it's baked into the bundle already
+
+Slight wording correction: Angular framework code isn't something separately "passed along" per interaction — it was already fully downloaded and executed as part of main.js in that initial load. 
+Every click-listener, router-matching logic, and component-swapping code is just JavaScript sitting in memory, ready to run, from the moment the initial bundle finished loading. Nothing extra gets fetched from the server just because you clicked something 
+— unless you're specifically using lazy-loaded routes (an advanced routing feature where a route's component code is deliberately split into a separate chunk and only fetched via HTTP the first time that route is visited, to keep the initial bundle smaller) — which you're not using yet, 
+so in your current project, truly zero HTTP requests happen for any in-app navigation.
 
 
+Summary, stated as the actual concept
+Initial load = real HTTP requests (index.html + all referenced bundles, however many that is). 
+Everything after that = pure in-memory JavaScript execution, where Angular's router fakes the "you navigated to a new page" experience by manipulating the browser's URL bar 
+via the History API and swapping rendered components — without ever asking the server for a new page. 
 
-
-
-
+This is the actual definition of what makes something a Single Page Application: literally, "the browser only ever loads one real page (index.html);
+ everything after that is JavaScript pretending to be multiple pages."
