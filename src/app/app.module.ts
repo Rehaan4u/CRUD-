@@ -12,6 +12,8 @@ import { updateDetailsForm } from '../forms/updateDetails/updateDetails.form.com
 
 const appRoutes: Routes = [
   // {path: '', component: AppComponent},
+  //here the :name is a route parameter, which is a placeholder for a value that can be passed in the URL.
+  //it can store john or 123 its basically of fixed type as string but can be converted to number if needed.
   {path:'updateDetails/:name', component:updateDetailsForm}
 ]
 
