@@ -188,3 +188,34 @@ via the History API and swapping rendered components — without ever asking the
 
 This is the actual definition of what makes something a Single Page Application: literally, "the browser only ever loads one real page (index.html);
  everything after that is JavaScript pretending to be multiple pages."
+ 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                What .get() actually does when called
+
+this.http.get<userData[]>(this.apiUrl)
+
+This call does not immediately send a request. It builds and returns a cold Observable — meaning nothing happens over the network yet. Internally, calling .get() does roughly this:
+
+Constructs an HttpRequest object — an internal representation holding the method (GET), the URL, any headers/params you passed, and response-type expectations. This is just a plain data object at this point, not a network call.
+Wraps that request-building logic inside an Observable — when you eventually call .subscribe(), that's the trigger that actually kicks off the real work. This is the same "lazy" behavior you already know from Observables generally — .get() 
+just describes what request would happen, .subscribe() is what makes it happen.
+
+What happens on .subscribe()
+The request passes through any registered HttpInterceptors — these are optional, separately-configured classes that can inspect/modify every outgoing request (commonly used for attaching an auth token header to every call) or every incoming response 
+(e.g. global error handling) before it reaches your .subscribe() callback. If you haven't set any up, requests pass straight through.
+The request reaches HttpBackend — internally, Angular's default backend implementation (HttpXhrBackend) uses the browser's built-in XMLHttpRequest API to actually perform the network call. This is the point where a real HTTP request finally leaves the browser.
+The browser sends the request and waits for a response — same as any HTTP call from any language/framework; this part is entirely standard networking, nothing Angular-specific.
+
+When the response arrives, HttpXhrBackend parses it (e.g. parsing JSON text into an actual JS object, since you asked for <userData[]>), wraps it in an HttpResponse object, and emits it through the Observable chain back to your .subscribe() callback — or 
+through any .pipe(map(...), catchError(...)) operators you chained beforehand, in order, before finally reaching your callback.
+
+The Observable then completes — a single HttpClient request-Observable, unlike some other Observables (like a UI click-stream), emits exactly once and then finishes, since one HTTP response is a one-time event, not an ongoing stream.
+Why this design (Observable-wrapped, lazy) instead of just returning a Promise
+
+Two practical advantages:
+
+Cancellation — if you .unsubscribe() before the response arrives (e.g. the user navigated away, or the async pipe's automatic cleanup runs because the component was destroyed), 
+HttpClient can actually abort the underlying XMLHttpRequest, saving bandwidth/avoiding wasted work. A Promise, once started, can't be cancelled.
+
+Composability with the same .pipe() operators (map, catchError, retry, switchMap, etc.) you'd already use elsewhere in an Angular app, rather than a separate API just for HTTP.
