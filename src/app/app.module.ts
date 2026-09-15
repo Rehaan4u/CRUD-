@@ -9,6 +9,9 @@ import { Footer } from '../Footer/footer.component';
 import { Users} from '../Users/users.component'
 import { updateDetailsForm } from '../forms/updateDetails/updateDetails.form.component';
 
+import {HttpClientModule} from '@angular/common/http'
+
+
 
 const appRoutes: Routes = [
   // {path: '', component: AppComponent},
@@ -28,7 +31,8 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    HttpClientModule
   ],
   bootstrap: [AppComponent]
 })

@@ -1,20 +1,10 @@
-
 <app-header></app-header>
-
 <div class="main-content">
   <router-outlet></router-outlet>
-
   <ul class="user-list">
-    <li class="user-list__item">
-      <app-user [reqUser]="user1"></app-user>
-    </li>
-    <li class="user-list__item">
-      <app-user [reqUser]="user2"></app-user>
-    </li>
-    <li class="user-list__item">
-      <app-user [reqUser]="user3"></app-user>
+    <li class="user-list__item" *ngFor="let user of users">
+      <app-user [reqUser]="user"></app-user>
     </li>
   </ul>
 </div>
-
 <app-footer></app-footer>
