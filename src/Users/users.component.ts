@@ -20,9 +20,10 @@ export class Users {
         //here with reqUSer I have used ?(optional chaining operatoar) to check if reqUser is 
         // not undefined before accessing its name property. 
         //This prevents runtime errors in case reqUser is undefined.
-        if(this.reqUser?.name)
-        this.router.navigate(['/updateDetails', this.reqUser.name])
-
+        if(this.reqUser?.id)
+        // 
+        this.router.navigate(['/updateDetails', this.reqUser.id])
+        console.log(`id passed is of value: ${this.reqUser?.id}`)
     }
 }
 
