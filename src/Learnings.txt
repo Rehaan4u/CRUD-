@@ -219,3 +219,78 @@ Cancellation — if you .unsubscribe() before the response arrives (e.g. the use
 HttpClient can actually abort the underlying XMLHttpRequest, saving bandwidth/avoiding wasted work. A Promise, once started, can't be cancelled.
 
 Composability with the same .pipe() operators (map, catchError, retry, switchMap, etc.) you'd already use elsewhere in an Angular app, rather than a separate API just for HTTP.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                    **VERY IMPORTANT LEARNING, NOT TO ADD THE COMPOENT INTO THE [formGroup] WHICH YOU ARE NOT SHOWING TO USER**
+
+    updateDetailsForm=new FormGroup({
+        name: new FormControl(''),
+        // avatar: new FormControl(''),
+        brief: new FormControl(''),
+        passwd: new FormControl('')
+    })
+
+    updateDetails() {
+        if(this.updateDetailsForm.get('passwd')?.value===this.currUserDetails?.passwd){
+
+                    const formValues=this.updateDetailsForm.value
+                    const updatedUserDetails = {
+                        ...this.currUserDetails,
+                        ...formValues
+                    }
+                    console.log(`The value of avatar going into the db is ${updatedUserDetails.avatar}`)
+                    this.dbUpdateUserDetails.dbPutUserDetails(updatedUserDetails, Number(this.id)).subscribe({
+
+                        next: (response) => {
+                            console.log(`User has been updates with this response`, response)
+                        },
+                        error: (error) => {
+                            console.error(`Update failed`, error)
+                        },
+                        complete: () => {
+                            console.log(`Succesfully completed the updating, proceding next`)
+                        }
+                    })
+                    this.router.navigate(['/'])
+               }
+        else {
+            alert(`Incorrect password`)
+        }
+    }
+
+    BOTH are the part of the form file, the first function is creating the formGroup and the formControls
+    and the other one is for updating the details filled by the suer basically making the put call, by using the service file as the object and
+    calling the method of the service using it
+
+    The main bug I faced here was that, even though there was no feature given in the html file to change the attribute value, stored int eh avatar key
+    still when I made the put call, its value got changed, 
+
+                               There were 2 issues here and their 2 solutions:
+
+  (i) When you make the put call, you pass the object and that, object replaces the object stored at that index, and thus I 
+      was only passing the this.userFormGroup.value to the this.currUserDetials, which only had the name, brief and passwd and thus, I was loosing the id and the 
+      avatar key:value pairs
+
+      Solution: formValues=this.userFormGroup.value
+      
+                const updateUserDetails {
+                    ...this.currUserDetails,
+                    ...formValues
+                }
+      What I did here was that, I passed the currUserDEtails ,which I got from the get call from the db and then passed the 
+      ...formValues, that only changed the values of those keys, which are different from the currUserDetails, here the sequnce matter
+      as you first get the values from ,the db and then you replace only those values which user has changed
+
+(ii) The secodn issue the main issue was that, the avatar value was getting changed to '' empty string, even thought there was no place
+its value was gettign changed, the issue was here 
+
+    updateDetailsForm=new FormGroup({
+        name: new FormControl(''),
+        // avatar: new FormControl(''),
+        brief: new FormControl(''),
+        passwd: new FormControl('')
+    })
+
+    here the avatar was initiallized with the empty value, and since it was getting shown to the user, there was no way, its value could be changed
+    and when I passed the ...formvalue, the avatar value was passed as '' string instead of waht value was fetched from the db
