@@ -24,11 +24,7 @@ export class AppComponent {
   // user3=this.userDetails.getUserData(3);
 
   ngOnInit(): void {
-    this.loadUsers()
-  }
-
-  loadUsers() {
-    this.userDetails.getUserData().subscribe({
+     this.userDetails.user$.subscribe({
       next: (data) => {
         this.users=data;
         console.log('User data loaded successfully:', this.users);
@@ -40,9 +36,7 @@ export class AppComponent {
         console.log('User data loading complete.');
       }
     })
-    this.ref.detectChanges(); 
   }
-
 
   // ngAfterViewInit(): void{
       // this.ref.detectChanges();
