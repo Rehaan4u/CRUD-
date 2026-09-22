@@ -15,6 +15,8 @@ export class addUserData {
     private apiUrl = 'https://crud-5f89d-default-rtdb.firebaseio.com'
 
 
+    //here in the method the Observable and post have types of <userData> cause that is what they would be 
+    //getting back from the server, we would have to change to type what server responds back
     postDataIntoDB(input: userData):Observable<userData>{
         return this.http.post<userData>(`${this.apiUrl}/users.json`, input)
     }

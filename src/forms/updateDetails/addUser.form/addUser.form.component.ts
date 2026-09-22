@@ -61,5 +61,4 @@ export class addUserForm {
             alert('Wrong password: Not verified to make the POST call')
         }
     }
-
 }
