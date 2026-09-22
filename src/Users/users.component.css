@@ -21,3 +21,20 @@
   padding: 6px 16px;
   cursor: pointer;
 }
+
+.user-card__actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.user-card__button--secondary {
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+}
+
+.user-card__button--secondary:hover {
+  background: rgba(0, 0, 0, 0.05);
+}

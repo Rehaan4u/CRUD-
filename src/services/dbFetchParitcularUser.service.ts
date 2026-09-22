@@ -18,7 +18,7 @@ export class dbFetchParticularUser {
     dbUserDataByID(id: number): Observable<userData> {
         return this.http.get<userData>(`${this.apiUrl}/users/${id-1}.json`).pipe(
             catchError((error) => {
-                console.error(`The call for fetching data fro the user with id: ${id} was not successfull`)
+                console.error(`The call for fetching data for the user with id: ${id} was not successfull`)
                 throw error
             })
         )

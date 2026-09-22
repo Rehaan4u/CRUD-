@@ -1,0 +1,45 @@
+<main class="page">
+  <form class="card" [formGroup]="addUserForm" (ngSubmit)="onAddUser()">
+
+    <header class="card-header">
+      <h1>Add a user</h1>
+      <p>Fill in the details, then enter the access password to save.</p>
+    </header>
+
+    <!-- Password check (separate FormGroup: validUser) -->
+    <div class="verify" [formGroup]="validUser">
+      <label for="verifyPasswd">Access password</label>
+      <input
+        id="verifyPasswd"
+        type="password"
+        formControlName="verifyPasswd"
+        autocomplete="off"
+        placeholder="Enter password"
+      />
+    </div>
+
+    <!-- User details (FormGroup: addUserForm) -->
+    <div class="field">
+      <label for="id">User ID</label>
+      <input id="id" type="text" formControlName="id" placeholder="e.g. 1024" />
+    </div>
+
+    <div class="field">
+      <label for="name">Name</label>
+      <input id="name" type="text" formControlName="name" placeholder="Full name" />
+    </div>
+
+    <div class="field">
+      <label for="brief">Brief</label>
+      <textarea
+        id="brief"
+        rows="4"
+        formControlName="brief"
+        placeholder="A short description of this user"
+      ></textarea>
+    </div>
+
+    <button type="submit" class="submit">Add user</button>
+
+  </form>
+</main>

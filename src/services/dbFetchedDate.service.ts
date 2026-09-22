@@ -26,4 +26,8 @@ export class dbFetchedData {
             })
         );
     }
+
+    ngOnChange(): void {
+        this.getUserData()
+    }
 }

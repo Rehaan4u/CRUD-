@@ -13,7 +13,7 @@ import {userData} from '../interfaces/userData.interface';
 export class Users {
     @Input() reqUser!: userData | undefined;
     // @Output() onClickUserData= new EventEmitter()
-    constructor(private router:Router) {}
+    constructor(private route:Router) {}
 
 
     updateClicked() {
@@ -22,8 +22,12 @@ export class Users {
         //This prevents runtime errors in case reqUser is undefined.
         if(this.reqUser?.id)
         // 
-        this.router.navigate(['/updateDetails', this.reqUser.id])
+        this.route.navigate(['/updateDetails', this.reqUser.id])
         console.log(`id passed is of value: ${this.reqUser?.id}`)
     }
+
+      add(){
+        this.route.navigate(['/addUserForm'])
+  }
 }
 
