@@ -18,6 +18,7 @@ export class dbUpdateUserDetails {
         private dbFetchedData:dbFetchedData
     ) {}
 
+    //Changes the put call to the Patch Call
     dbPutUserDetails(userObj: userData | undefined, idx: number): Observable<userData> {
          return this.http.patch<userData>(`${this.apiUrl}/users/${idx}`, userObj).pipe(
             tap(()=>this.dbFetchedData.refresh()),
