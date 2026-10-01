@@ -1,22 +1,22 @@
 //(make a function to make the get call) -> ()
-import {Injectable} from '@angular/core'
-import {Observable ,catchError} from 'rxjs'
-import {HttpClient} from '@angular/common/http'
-import {userData} from '../interfaces/userData.interface'
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Observable, catchError } from 'rxjs'
+import { userData } from '../interfaces/userData.interface'
 
 @Injectable({
     providedIn: 'root'
 })
 export class dbFetchParticularUser {
 
-    public apiUrl= "https://crud-5f89d-default-rtdb.firebaseio.com"
+    public apiUrl= "http://localhost:8080/users"
 
     constructor(
         private http: HttpClient
     ) {}
 
     dbUserDataByID(id: number): Observable<userData> {
-        return this.http.get<userData>(`${this.apiUrl}/users/${id-1}.json`).pipe(
+        return this.http.get<userData>(`${this.apiUrl}/${id}`).pipe(
             catchError((error) => {
                 console.error(`The call for fetching data for the user with id: ${id} was not successfull`)
                 throw error

@@ -1,14 +1,13 @@
-import { Component, OnInit} from '@angular/core'
-import { FormGroup, FormControl } from '@angular/forms'
-import { userData } from '../../interfaces/userData.interface'   
+import { Component } from '@angular/core'
+import { FormControl, FormGroup } from '@angular/forms'
+import { userData } from '../../interfaces/userData.interface'
 // import { userDetails } from '../../services/userData.service'
-import {ActivatedRoute} from '@angular/router'
+import { ActivatedRoute } from '@angular/router'
 //We import router to redirec tthe user to the home page, after he cliucks the submit button 
 //in the form, and the form is submitted successfully.
 import { Router } from '@angular/router'
 import { dbFetchParticularUser } from '../../services/dbFetchParitcularUser.service'
 import { dbUpdateUserDetails } from '../../services/dbUpdateUserDetails.service'
-import {catchError} from 'rxjs'
 @Component({
     selector: 'app-updateDetails-form',
     templateUrl: './updateDetails.form.component.html',
@@ -37,6 +36,7 @@ export class updateDetailsForm {
         passwd: new FormControl('')
     })
 
+    //gets the id from the ActivatedRoute
     public id = this.routePath.snapshot.paramMap.get('id');
 
     ngOnInit(): void {
@@ -55,7 +55,8 @@ export class updateDetailsForm {
                         // this.currUserDetails={...response}
                         this.currUserDetails=response
                         console.log(`The value of avatar stored here is ${this.currUserDetails.avatar}`)
-                                  this.updateDetailsForm.patchValue({
+                                  
+                        this.updateDetailsForm.patchValue({
                                     name:this.currUserDetails?.name,
                                     brief: this.currUserDetails?.brief,
                                 })

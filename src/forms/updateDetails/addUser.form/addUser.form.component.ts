@@ -1,8 +1,8 @@
-import{Component} from '@angular/core'
-import {FormGroup, FormControl} from '@angular/forms'
-import {userData} from '../../../interfaces/userData.interface' 
-import { addUserData} from '../../../services/adduserData.service'
-import {Router, ActivatedRoute} from '@angular/router'
+import { Component } from '@angular/core'
+import { FormControl, FormGroup } from '@angular/forms'
+import { Router } from '@angular/router'
+import { userData } from '../../../interfaces/userData.interface'
+import { addUserData } from '../../../services/adduserData.service'
 // import { ReactiveFormsModule } from '@angular/forms'
 
 
@@ -17,7 +17,7 @@ export class addUserForm {
     private officialPasswd="3690"
 
     public newUserObj:userData = {
-        id:'',
+        id:-1,
         name:'',
         brief:'',
         avatar: '',

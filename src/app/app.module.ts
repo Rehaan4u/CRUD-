@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule, Routes } from '@angular/router';
 
-import { AppComponent } from './app.component';
-import { Header } from '../Header/header.component';
 import { Footer } from '../Footer/footer.component';
-import { Users} from '../Users/users.component'
+import { Header } from '../Header/header.component';
+import { Users } from '../Users/users.component';
+import { addUserForm } from '../forms/updateDetails/addUser.form/addUser.form.component';
 import { updateDetailsForm } from '../forms/updateDetails/updateDetails.form.component';
-import { addUserForm} from '../forms/updateDetails/addUser.form/addUser.form.component'
+import { AppComponent } from './app.component';
 
-import {HttpClientModule} from '@angular/common/http'
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -39,4 +39,4 @@ const appRoutes: Routes = [
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

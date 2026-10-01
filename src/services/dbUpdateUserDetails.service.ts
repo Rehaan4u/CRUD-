@@ -1,8 +1,8 @@
-import {HttpClient} from '@angular/common/http'
-import {Injectable} from '@angular/core'
-import {Observable, catchError} from 'rxjs'
-import {userData} from '../interfaces/userData.interface'
-import {tap} from 'rxjs/operators'
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Observable, catchError } from 'rxjs'
+import { tap } from 'rxjs/operators'
+import { userData } from '../interfaces/userData.interface'
 import { dbFetchedData } from './dbFetchedDate.service'
 
 
@@ -11,7 +11,7 @@ import { dbFetchedData } from './dbFetchedDate.service'
 })
 export class dbUpdateUserDetails {
 
-    public apiUrl="https://crud-5f89d-default-rtdb.firebaseio.com"
+    public apiUrl="http://localhost:8080"
 
     constructor(
         private http:HttpClient,
@@ -19,7 +19,7 @@ export class dbUpdateUserDetails {
     ) {}
 
     dbPutUserDetails(userObj: userData | undefined, idx: number): Observable<userData> {
-         return this.http.put<userData>(`${this.apiUrl}/users/${idx-1}.json`, userObj).pipe(
+         return this.http.patch<userData>(`${this.apiUrl}/users/${idx}`, userObj).pipe(
             tap(()=>this.dbFetchedData.refresh()),
             tap(()=>console.log(`PUT call was made succesfully`)),
             catchError( (error) => {
