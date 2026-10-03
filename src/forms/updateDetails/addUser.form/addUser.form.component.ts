@@ -13,8 +13,8 @@ import { addUserData } from '../../../services/adduserData.service'
 })
 export class addUserForm {
 
-    private reqPasswd= "2004"
-    private officialPasswd="3690"
+    // private reqPasswd= "2004"
+    // private officialPasswd="3690"
 
     public newUserObj:userData = {
         id:-1,
@@ -42,11 +42,29 @@ export class addUserForm {
         })
     
     onAddUser(): void{
-        if(this.validUser.get('verifyPasswd')?.value===this.reqPasswd){
-                    this.newUserObj= {
-                        ...this.newUserObj,
-                        ...this.addUserForm.value,
-        }
+        // if(this.validUser.get('verifyPasswd')?.value===this.reqPasswd){
+        //             this.newUserObj= {
+        //                 ...this.newUserObj,
+        //                 ...this.addUserForm.value,
+        // }
+        //     this.addUserData.postDataIntoDB(this.newUserObj).subscribe({
+        //         error: (error) => {
+        //             console.error(`Error in making the POST call`)
+        //         },
+        //         complete: ()=> {
+        //             console.log(`Succesfully completed the Post call`)
+        //         }
+        //     })
+        //     this.route.navigate(['/'])       
+        // }
+        // else {
+        //     alert('Wrong password: Not verified to make the POST call')
+        // }
+
+            this.newUserObj= {
+                 ...this.newUserObj,
+                 ...this.addUserForm.value,
+                }
             this.addUserData.postDataIntoDB(this.newUserObj).subscribe({
                 error: (error) => {
                     console.error(`Error in making the POST call`)
@@ -55,10 +73,6 @@ export class addUserForm {
                     console.log(`Succesfully completed the Post call`)
                 }
             })
-            this.route.navigate(['/'])       
-        }
-        else {
-            alert('Wrong password: Not verified to make the POST call')
-        }
+            this.route.navigate(['/'])  
     }
 }
