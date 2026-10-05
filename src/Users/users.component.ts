@@ -1,7 +1,7 @@
 
-import { Router } from '@angular/router'; 
-import {Input,Component,Output, EventEmitter} from '@angular/core';
-import {userData} from '../interfaces/userData.interface';
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { userData } from '../interfaces/userData.interface';
 
 
 @Component({
@@ -26,8 +26,17 @@ export class Users {
         console.log(`id passed is of value: ${this.reqUser?.id}`)
     }
 
-      add(){
+    add()
+    {
         this.route.navigate(['/addUserForm'])
-  }
+    }
+    deleteUser()
+    {
+        if(this.reqUser?.id)
+        {
+             this.route.navigate(['/deleteUserForm',this.reqUser.id])
+        }
+       
+    }
 }
 

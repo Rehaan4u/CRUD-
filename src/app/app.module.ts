@@ -6,6 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { Footer } from '../Footer/footer.component';
 import { Header } from '../Header/header.component';
 import { Users } from '../Users/users.component';
+import { deleteUserForm } from "../forms/updateDetails/DeleteUser.form/deleteUser.form.component";
 import { addUserForm } from '../forms/updateDetails/addUser.form/addUser.form.component';
 import { updateDetailsForm } from '../forms/updateDetails/updateDetails.form.component';
 import { AppComponent } from './app.component';
@@ -19,7 +20,8 @@ const appRoutes: Routes = [
   //here the :name is a route parameter, which is a placeholder for a value that can be passed in the URL.
   //it can store john or 123 its basically of fixed type as string but can be converted to number if needed.
   {path:'updateDetails/:id', component:updateDetailsForm},
-  {path:'addUserForm', component: addUserForm}
+  {path:'addUserForm', component: addUserForm},
+  {path:'deleteUserForm/:userId', component: deleteUserForm}
 ]
 
 @NgModule({
@@ -29,7 +31,8 @@ const appRoutes: Routes = [
     Footer,
     Users,
     updateDetailsForm,
-    addUserForm
+    addUserForm,
+    deleteUserForm
   ],
   imports: [
     BrowserModule,
