@@ -61,11 +61,13 @@ export class addUserForm {
         //     alert('Wrong password: Not verified to make the POST call')
         // }
 
-            this.newUserObj= {
+            const passwd = this.validUser.value.verifyPasswd??'';
+            const newUserData = this.newUserObj= {
                  ...this.newUserObj,
                  ...this.addUserForm.value,
                 }
-            this.addUserData.postDataIntoDB(this.newUserObj).subscribe({
+            this.addUserData.postDataIntoDB(newUserData,passwd).subscribe({
+                next: (nextStep)=> this.route.navigate(['/']),
                 error: (error) => {
                     console.error(`Error in making the POST call`)
                 },
@@ -73,6 +75,6 @@ export class addUserForm {
                     console.log(`Succesfully completed the Post call`)
                 }
             })
-            this.route.navigate(['/'])  
+            // this.route.navigate(['/'])  
     }
 }
