@@ -1,0 +1,97 @@
+.page {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.card-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.6rem;
+  color: #b3261e;
+}
+
+.card-header p {
+  margin: 0 0 1.5rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.error {
+  color: #b3261e;
+}
+
+.verify {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background: #fdf3f2;
+  border-left: 4px solid #b3261e;
+  border-radius: 6px;
+}
+
+.verify label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.verify input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.verify input:focus {
+  outline: 2px solid #b3261e;
+  outline-offset: 1px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn--danger {
+  background: #b3261e;
+  color: #fff;
+  border: 1px solid #b3261e;
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: #8c1d18;
+}
+
+.btn--danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--secondary {
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+}
+
+.btn--secondary:hover {
+  background: rgba(0, 0, 0, 0.05);
+}

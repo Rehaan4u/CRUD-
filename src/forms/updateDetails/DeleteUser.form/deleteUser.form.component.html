@@ -1,0 +1,32 @@
+<main class="page">
+  <form class="card" [formGroup]="PermantDeleteUser" (ngSubmit)="DeleteUser()">
+
+    <header class="card-header">
+      <h1>Delete user</h1>
+      <p *ngIf="userId; else noId">
+        You are about to permanently delete user <strong>#{{ userId }}</strong>.
+        This action cannot be undone.
+      </p>
+      <ng-template #noId>
+        <p class="error">No user ID was provided. Go back and try again.</p>
+      </ng-template>
+    </header>
+
+    <div class="verify">
+      <label for="passwd">Access password</label>
+      <input
+        id="passwd"
+        type="password"
+        formControlName="passwd"
+        autocomplete="off"
+        placeholder="Enter password to confirm"
+      />
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn--secondary" (click)="cancel()">Cancel</button>
+      <button type="submit" class="btn btn--danger" [disabled]="!userId">Delete permanently</button>
+    </div>
+
+  </form>
+</main>

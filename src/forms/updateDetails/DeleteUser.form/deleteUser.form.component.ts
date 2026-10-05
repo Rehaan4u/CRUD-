@@ -6,7 +6,7 @@ import { permanentDeleteUser } from 'src/services/deleteUser.service';
 @Component({
     selector: "app-delete-form",
     templateUrl: "deleteUser.form.component.html",
-    styleUrls:[]
+    styleUrls:["deleteUser.form.component.css"]
 })
 export class deleteUserForm
 {   
