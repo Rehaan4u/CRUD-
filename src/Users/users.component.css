@@ -1,32 +1,74 @@
 .user-card {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
+  gap: 20px;
+
+  /* fixed footprint so cards never grow/shrink with content */
+  width: 480px;
+  height: 220px;
+  box-sizing: border-box;
+
+  padding: 20px;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 16px;
+  border-radius: 10px;
+  background: #fff;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+  border-color: #16818f;
 }
 
 .user-card__avatar {
-  width: 100px;
-  height: 100px;
+  flex: 0 0 120px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
   border-radius: 50%;
-  margin-bottom: 12px;
 }
 
-.user-card__button {
-  margin-top: 12px;
-  padding: 6px 16px;
-  cursor: pointer;
+.user-card__body {
+  flex: 1;
+  min-width: 0; /* required so text-overflow/line-clamp works inside a flex child */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.user-card__name {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+
+.user-card__brief {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #555;
+
+  /* clamp long bios to 3 lines so the fixed card height always fits */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .user-card__actions {
   display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.user-card__button {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: #f1f1f1;
+  cursor: pointer;
 }
 
 .user-card__button--secondary {
@@ -38,12 +80,31 @@
 .user-card__button--secondary:hover {
   background: rgba(0, 0, 0, 0.05);
 }
+
 .user-card__button--danger {
   background: #b3261e;
   color: #fff;
-  border: 1px solid #b3261e;
+  border-color: #b3261e;
 }
 
 .user-card__button--danger:hover {
   background: #8c1d18;
+}
+
+/* Stack to a single column on narrow screens */
+@media (max-width: 540px) {
+  .user-card {
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .user-card__body {
+    text-align: center;
+  }
+
+  .user-card__actions {
+    justify-content: center;
+  }
 }

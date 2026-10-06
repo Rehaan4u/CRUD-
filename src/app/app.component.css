@@ -1,13 +1,44 @@
+.main-content {
+  position: relative;
+  min-height: 70vh;
+  overflow: hidden;
+}
+
+/* Faded QNOPY watermark sitting behind the user list */
+.main-content__bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('../assets/qnopyLogo1.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #16818f; 
+  background-size: 520px;
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .user-list {
+  position: relative;
+  z-index: 1;
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
-  gap: 24px;
-  padding: 40px 20px;
+  justify-content: center;
+  gap: 28px;
+  padding: 48px 24px;
   margin: 0;
 }
 
 .user-list__item {
-  flex: 0 1 200px;
+  flex: 0 0 auto;
+}
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1 0 auto;   /* grows to fill leftover space, pushing footer down */
 }
