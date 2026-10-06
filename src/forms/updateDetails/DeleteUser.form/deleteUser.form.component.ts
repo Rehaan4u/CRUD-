@@ -39,8 +39,8 @@ export class deleteUserForm
         }
         else 
         {
-            this.permanentDeleteUser.deleteUser(this.userId).subscribe({
-                next: (next)=>console.log(`DELETE call was made succesfully`),
+            this.permanentDeleteUser.deleteUser(this.userId, this.PermantDeleteUser.get('passwd')?.value).subscribe({
+                next: (next)=>this.route.navigate(['/']),
                 error:(error)=>console.error(`Error in making the DELETE call`),
                 complete:()=> console.log(`DELETE call completed`)
 

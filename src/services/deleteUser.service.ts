@@ -15,9 +15,9 @@ export class permanentDeleteUser
         private dbFetchedData: dbFetchedData
     ){}
 
-    deleteUser(userId: string):Observable<userData>
+    deleteUser(userId: string, passwd: string):Observable<userData>
     {
-        const headers=new HttpHeaders({"Which-User": userId});
+        const headers=new HttpHeaders({"Which-User": userId, "Password": passwd});
         return this.http.delete<userData>(`${this.apiUrl}/deleteUser`, {headers}).pipe(
             tap(()=> this.dbFetchedData.refresh()),
             catchError((error) => {
