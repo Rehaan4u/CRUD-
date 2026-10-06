@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable, tap } from 'rxjs'
+import { catchError, Observable, tap } from 'rxjs'
 import { userData } from '../interfaces/userData.interface'
 import { dbFetchedData } from './dbFetchedDate.service'
 
@@ -23,6 +23,12 @@ export class addUserData {
         const headers= new HttpHeaders({'Admin-Passwd':passwd});
         console.log(`Going to start making the POST call`);
         console.log('Value of heders is ', headers);
-        return this.http.post<userData>(`${this.apiUrl}/adduser`, input, {headers}).pipe(tap(()=>this.triggerNewUser.refresh()));
+        return this.http.post<userData>(`${this.apiUrl}/adduser`, input, {headers}).pipe(
+            tap(()=>this.triggerNewUser.refresh()),
+            catchError((error)=>{
+                console.error(`The error occured while making the POST call`);
+                throw error;
+            })
+        );
     }
 }

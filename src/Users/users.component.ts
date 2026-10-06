@@ -38,5 +38,9 @@ export class Users {
         }
        
     }
+    viewDetails()
+    {
+        this.route.navigate(['/fullView', this.reqUser?.id]);
+    }
 }
 

@@ -1,0 +1,16 @@
+<div class="detail-card" *ngIf="particularUserData; else loading">
+  <button class="detail-card__close" (click)="goBack()" aria-label="Back">&times;</button>
+
+  <img
+    [src]="'assets/' + particularUserData.avatar"
+    alt="{{ particularUserData.name }} avatar"
+    class="detail-card__avatar"
+  />
+
+  <h2 class="detail-card__name">{{ particularUserData.name }}</h2>
+  <p class="detail-card__brief">{{ particularUserData.brief }}</p>
+</div>
+
+<ng-template #loading>
+  <p class="detail-card__loading">Loading user details&hellip;</p>
+</ng-template>

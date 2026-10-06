@@ -10,6 +10,7 @@ import { userData } from '../interfaces/userData.interface'
 export class dbFetchParticularUser {
 
     public apiUrl= "http://localhost:8080/users"
+    public fullViewUrl="http://localhost:8080/users/fullView"
 
     constructor(
         private http: HttpClient
@@ -17,6 +18,14 @@ export class dbFetchParticularUser {
 
     dbUserDataByID(id: number): Observable<userData> {
         return this.http.get<userData>(`${this.apiUrl}/${id}`).pipe(
+            catchError((error) => {
+                console.error(`The call for fetching data for the user with id: ${id} was not successfull`)
+                throw error
+            })
+        )
+    }
+    fullViewByID(id: number): Observable<userData> {
+        return this.http.get<userData>(`${this.fullViewUrl}/${id}`).pipe(
             catchError((error) => {
                 console.error(`The call for fetching data for the user with id: ${id} was not successfull`)
                 throw error

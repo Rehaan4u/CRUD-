@@ -61,8 +61,8 @@ export class addUserForm {
         //     alert('Wrong password: Not verified to make the POST call')
         // }
 
-            const passwd = this.validUser.value.verifyPasswd??'';
-            const newUserData = this.newUserObj= {
+            const passwd:string = this.validUser.value.verifyPasswd??'';
+            const newUserData:userData = this.newUserObj= {
                  ...this.newUserObj,
                  ...this.addUserForm.value,
                 }

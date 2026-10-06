@@ -91,6 +91,15 @@
   background: #8c1d18;
 }
 
+
+.user-card__avatar {
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.user-card__avatar:hover {
+  box-shadow: 0 0 0 3px #16818f;
+}
 /* Stack to a single column on narrow screens */
 @media (max-width: 540px) {
   .user-card {

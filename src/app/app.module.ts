@@ -12,6 +12,7 @@ import { updateDetailsForm } from '../forms/updateDetails/updateDetails.form.com
 import { AppComponent } from './app.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { fullView } from '../fullView/fullView.component';
 
 
 
@@ -21,7 +22,8 @@ const appRoutes: Routes = [
   //it can store john or 123 its basically of fixed type as string but can be converted to number if needed.
   {path:'updateDetails/:id', component:updateDetailsForm},
   {path:'addUserForm', component: addUserForm},
-  {path:'deleteUserForm/:userId', component: deleteUserForm}
+  {path:'deleteUserForm/:userId', component: deleteUserForm},
+  {path:'fullView/:userId', component: fullView}
 ]
 
 @NgModule({
@@ -32,7 +34,8 @@ const appRoutes: Routes = [
     Users,
     updateDetailsForm,
     addUserForm,
-    deleteUserForm
+    deleteUserForm,
+    fullView
   ],
   imports: [
     BrowserModule,
