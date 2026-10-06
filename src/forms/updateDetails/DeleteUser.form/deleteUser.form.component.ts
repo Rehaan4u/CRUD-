@@ -41,7 +41,7 @@ export class deleteUserForm
         {
             this.permanentDeleteUser.deleteUser(this.userId, this.PermantDeleteUser.get('passwd')?.value).subscribe({
                 next: (next)=>this.route.navigate(['/']),
-                error:(error)=>console.error(`Error in making the DELETE call`),
+                error:(error)=> alert("Invalid Password"),
                 complete:()=> console.log(`DELETE call completed`)
 
             })
