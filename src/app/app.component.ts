@@ -1,17 +1,37 @@
-import { Component, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core'
+import { ChangeDetectorRef, Component } from '@angular/core'
 // import {userDetails } from '../services/userData.service'
-import {userData} from '../interfaces/userData.interface'
-import {dbFetchedData} from '../services/dbFetchedDate.service'
+import { userData } from '../interfaces/userData.interface'
+import { dbFetchedData } from '../services/dbFetchedDate.service'
 // import { addUserForm } from 'src/forms/updateDetails/addUser.form/addUser.form.component'
-import {Router} from '@angular/router'
+import { animate, style, transition, trigger } from '@angular/animations'
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router'
+
+  
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  animations:[trigger('fade',
+    [
+      transition(':enter', 
+        [
+          style({opacity:0}),
+          animate('2000ms ease-in', style({ opacity: 1 }))
+        ]),
+       transition(':leave',
+        [
+          style({opacity:1}),
+          animate('1500ms ease-out', style({ opacity: 0 }))
+        ])
+    ])]
 })
 
 export class AppComponent {
+
+  public loading:boolean =false;
+
   constructor(private userDetails:dbFetchedData, 
     public ref: ChangeDetectorRef,
     // public addUser: addUserForm,
@@ -24,6 +44,20 @@ export class AppComponent {
   // user3=this.userDetails.getUserData(3);
 
   ngOnInit(): void {
+
+    this.route.events.subscribe((event)=>{
+      if(event instanceof NavigationStart)
+      {
+        this.loading=true;
+      }
+      else if(event instanceof NavigationCancel || 
+              event instanceof  NavigationEnd || 
+              event instanceof NavigationError){
+        this.loading=false;
+      }
+    }
+
+    )
      this.userDetails.user$.subscribe({
       next: (data) => {
         this.users=data;

@@ -3,6 +3,8 @@
  
 <main class="main-content">
   <div class="main-content__bg" aria-hidden="true"></div>
+
+  <app-loader *ngIf="loading" [@fade]>App-Loader</app-loader>
  
   <router-outlet></router-outlet>
  

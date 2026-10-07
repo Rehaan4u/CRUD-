@@ -1,3 +1,4 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { userData } from '../interfaces/userData.interface';
@@ -6,7 +7,20 @@ import { dbFetchParticularUser } from '../services/dbFetchParitcularUser.service
 @Component({
     selector:"app-full-view",
     templateUrl: "fullView.component.html",
-    styleUrls:["fullView.component.css"]
+    styleUrls:["fullView.component.css"],
+    animations:[trigger('fade',
+        [
+          transition(':enter', 
+            [
+              style({opacity:0}),
+              animate('200ms ease-in', style({ opacity: 1 }))
+            ]),
+           transition(':leave',
+            [
+              style({opacity:1}),
+              animate('150ms ease-out', style({ opacity: 0 }))
+            ])
+        ])]
 })
 export class fullView 
 {

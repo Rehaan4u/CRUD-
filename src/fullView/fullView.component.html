@@ -1,4 +1,4 @@
-<div class="detail-card" *ngIf="particularUserData; else loading">
+<div class="detail-card" *ngIf="particularUserData; else loading" [@fade]>
   <button class="detail-card__close" (click)="goBack()" aria-label="Back">&times;</button>
 
   <img
@@ -12,5 +12,5 @@
 </div>
 
 <ng-template #loading>
-  <p class="detail-card__loading">Loading user details&hellip;</p>
+  <img src="assets/cat-rolling.gif" alt="Loading" class="fullview-loading-gif" [@fade] />
 </ng-template>

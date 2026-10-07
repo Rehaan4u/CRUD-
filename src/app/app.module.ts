@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 
 import { Footer } from '../Footer/footer.component';
@@ -12,6 +13,7 @@ import { updateDetailsForm } from '../forms/updateDetails/updateDetails.form.com
 import { AppComponent } from './app.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { animeLoader } from 'src/animation/loader.component';
 import { fullView } from '../fullView/fullView.component';
 
 
@@ -35,10 +37,12 @@ const appRoutes: Routes = [
     updateDetailsForm,
     addUserForm,
     deleteUserForm,
-    fullView
+    fullView,
+    animeLoader
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes),
     HttpClientModule
