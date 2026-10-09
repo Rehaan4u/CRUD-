@@ -13,6 +13,7 @@ import { updateDetailsForm } from '../forms/updateDetails/updateDetails.form.com
 import { AppComponent } from './app.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { OAuthModule } from 'angular-oauth2-oidc';
 import { animeLoader } from 'src/animation/loader.component';
 import { fullView } from '../fullView/fullView.component';
 
@@ -45,7 +46,13 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes),
-    HttpClientModule
+    HttpClientModule,
+    OAuthModule.forRoot({
+      resourceServer: {
+        allowedUrls: ['http://localhost:4200'],
+        sendAccessToken: true
+      }
+    })
   ],
   bootstrap: [AppComponent]
 })

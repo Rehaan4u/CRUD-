@@ -62,7 +62,9 @@ export class addUserForm {
         // }
 
             const passwd:string = this.validUser.value.verifyPasswd??'';
-            const newUserData:userData = this.newUserObj= {
+            if(passwd)
+            {
+                const newUserData:userData = this.newUserObj= {
                  ...this.newUserObj,
                  ...this.addUserForm.value,
                 }
@@ -75,6 +77,10 @@ export class addUserForm {
                     console.log(`Succesfully completed the Post call`)
                 }
             })
+
+            }
+            else alert('Please enter the password to verify the POST call')
+            
             // this.route.navigate(['/'])  
     }
 }
